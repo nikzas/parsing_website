@@ -1,4 +1,4 @@
-from ll import fetch_data, time_date, record_text
+from func_mode import fetch_data, time_date, record_text
 import asyncio
 from playwright.async_api import async_playwright
 from datetime import datetime, timedelta
