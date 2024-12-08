@@ -1,22 +1,22 @@
-from ll import fetch_data, time_date, record_text
+from find_iframe import *
 import asyncio
-from playwright.async_api import async_playwright
 from datetime import datetime, timedelta
 
-async def main():
+async def main(url):
     async with async_playwright() as p:
-        while True:
-            browser = await p.chromium.launch(headless=True, args=["--no-sandbox"])
-            context = await browser.new_context()
-            page = await context.new_page()
-            await context.clear_cookies()
-
-            start_time = datetime.now()
-            while (datetime.now() - start_time) < timedelta(seconds=3):
-                text_content = await fetch_data(page)
-                current_time, filename = await time_date()
-                await record_text(current_time, filename, text_content)
+        browser = await p.chromium.launch(headless=True)
+        context = await browser.new_context()
+        page = await context.new_page()
+        try:
+            await navigate_to_page(page, url)
+            target_frame = await wait_for_iframe(page)
+            if target_frame:
+                await fetch_history_from_frame(target_frame)
+        except Exception as e:
+            print(f"An error occurred: {e}")
+        finally:
             await browser.close()
-            await asyncio.sleep(7)
 
-asyncio.run(main())
+if __name__ == "__main__":
+    url = "https://1wvec.com/casino/play/1play_1play_luckyjet"
+    asyncio.run(main(url))
