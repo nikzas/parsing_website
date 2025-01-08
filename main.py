@@ -6,7 +6,8 @@ from datetime import datetime, timedelta
 async def main():
     async with async_playwright() as p:
         while True:
-            browser = await p.chromium.launch(headless=True, args=["--no-sandbox"])
+            browser = await p.chromium.launch(headless=True,
+                                              args=["--no-sandbox"])
             context = await browser.new_context()
             page = await context.new_page()
             await context.clear_cookies()
@@ -19,4 +20,5 @@ async def main():
             await browser.close()
             await asyncio.sleep(7)
 
-asyncio.run(main())
+if __name__ == "__main__":
+    asyncio.run(main())

@@ -1,20 +1,53 @@
 import asyncio
-from playwright.async_api import async_playwright, TimeoutError as PlaywrightTimeoutError, Error
+from playwright.async_api import async_playwright
 from datetime import datetime
 import aiofiles
 
 async def fetch_data(page):
     try:
-        await page.goto(
-            "https://100hp.app/lucky/onewin/?exitUrl=https%253A%252F%252F1wwxqc.win%252Fcasino&language=ru&b=demo"
-        ) 
-        element = await page.wait_for_selector('.sc-gJCZQp', state="visible", timeout=10000)
-        text_content = await element.text_content() if element else "No content"
-        return text_content
-    except (PlaywrightTimeoutError, Error, TimeoutError) as e:
-        page.screenshot(path=f"{datetime.now()}.png")
+        await page.goto('https://1wzjvm.top/casino/play/1play_1play_luckyjet?p=7q53')
+        await page.wait_for_load_state('load')
+        await asyncio.sleep(8)  # Возможно, это можно убрать или уменьшить
+
+        iframe = await get_iframe(page)
+        if iframe:
+            return await get_text_from_iframe(iframe, page)
+        else:
+            print("Iframe не найден")
+            await take_screenshot(page)
+            return "Iframe not found"
+    except Exception as e:
+        await take_screenshot(page)
         print(f"Failed to fetch data: {e}")
         return "Error fetching data"
+
+async def get_iframe(page):
+    await page.wait_for_selector('iframe[src*="1play.gamedev-tech.cc/lucky/onewin"]', timeout=10000)
+    return page.frame(url=lambda url: "1play.gamedev-tech.cc/lucky/onewin" in url)
+
+async def get_text_from_iframe(iframe, page):
+    await iframe.wait_for_selector('#history-button', state='visible', timeout=10000)
+    await iframe.locator('#history-button').click()
+    await iframe.wait_for_selector('.sc-gJCZQp', state='visible', timeout=10000)
+    text = await iframe.locator('.sc-gJCZQp').inner_text()
+
+    await take_screenshot(page)
+
+    if len(text) >= 20:
+        return text.split('\n')
+    else:
+        print("Полученный текст слишком короткий.")
+        await take_screenshot_else(page)
+        await page.reload()
+        return await get_text_from_iframe(await get_iframe(page), page)
+
+async def take_screenshot(page):
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    await page.screenshot(path=f"screenshots/screenshots-{timestamp}.png")
+
+async def take_screenshot_else(page):
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    await page.screenshot(path=f"screenshots/screenshots-{timestamp}-ELSE.png")
 
 async def time_date():
     current_datetime = datetime.now()
@@ -30,5 +63,12 @@ async def record_text(current_time, filename, text_content):
     except Exception as e:
         print(f"Failed to record text: {e}")
 
+async def process_data(page):
+    # Получаем данные с веб-страницы
+    text_content = await fetch_data(page)
 
-#"https://lucky-jet.gamedev-atech.cc/?exitUrl=https%253A%252F%252F1wowei.xyz%252Fcasino&language=ru&b=demo"
+    # Получаем текущее время и имя файла для записи
+    current_time, filename = await time_date()
+
+    # Записываем полученные данные в файл
+    await record_text(current_time, filename, text_content)
