@@ -10,7 +10,7 @@ def remove_consecutive_duplicates(list_of_lists):
             result.append(current_list)
     return result
 
-directory = r'D:\ProjectPython\parsing_website\st'
+directory = r'C:\project\parsing_website\st'
 
 for filename in os.listdir(directory):
     if not filename.endswith('.txt'):
