@@ -17,6 +17,7 @@ for filename in os.listdir(directory):
         continue
     file_path = os.path.join(directory, filename)
 
+
     with open(file_path, 'r', encoding='utf-8') as f:
         numbers_list = []
         for line in f:
