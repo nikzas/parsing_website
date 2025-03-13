@@ -10,7 +10,7 @@ def remove_consecutive_duplicates(list_of_lists):
             result.append(current_list)
     return result
 
-directory = r'C:\project\parsing_website\st'
+directory = r'D:\ProjectPython\parsing_website\st'
 
 for filename in os.listdir(directory):
     if not filename.endswith('.txt'):
@@ -23,9 +23,9 @@ for filename in os.listdir(directory):
             if ' - ' in line and 'Error' not in line:
                 data = line.split(' - ')[1].strip().replace('\xa0', '')
                 numbers = [float(num)
-                                for num in data.rstrip('x').split('x')
+                                for num in data[6:].rstrip('x').split('x')
                                     if num and num != '0']
-                if 5 <= len(numbers) <= 20:
+                if 5 <= len(numbers) <= 30:
                     numbers_list.append(numbers)
 
         numbers_list = remove_consecutive_duplicates(numbers_list)
@@ -33,3 +33,10 @@ for filename in os.listdir(directory):
         with open(file_path, 'w', encoding='utf-8') as f:
             for numbers in numbers_list:
                 f.write(f"{numbers}\n")
+
+
+for i in range(0, len(data)):
+    if data[i] == data[i+1]:
+        print(data[i+1])
+    else:
+        print('Весь список без повторений')
