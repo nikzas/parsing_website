@@ -22,8 +22,8 @@ def find_shift_position(main_arr, new_arr, precision=2):
 
     return len(new_arr) - max_overlap
 
-input_folder = r'D:\ProjectPython\parsing_website\st'
-output_folder = r'D:\ProjectPython\parsing_website\csv'
+input_folder = r'C:\project\parsing_website\st'
+output_folder = r'C:\project\parsing_website\csv'
 
 # Получаем список всех файлов в папке
 for filename in os.listdir(input_folder):
@@ -42,7 +42,7 @@ for filename in os.listdir(input_folder):
             if len(lst) != list_length:
                 print(f"Ошибка в файле {filename}: список {idx} имеет длину {len(lst)} вместо {list_length}!")
                 break
-        else:  # Если не было ошибок, продолжаем
+        else:
             combined = np.array(data[0], dtype=np.float64)
             print(f"Начальная длина в файле {filename}: {len(combined)}")
 

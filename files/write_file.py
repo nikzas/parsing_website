@@ -10,7 +10,7 @@ def remove_consecutive_duplicates(list_of_lists):
             result.append(current_list)
     return result
 
-directory = r'D:\ProjectPython\parsing_website\st'
+directory = r'C:\project\parsing_website\st'
 
 for filename in os.listdir(directory):
     if not filename.endswith('.txt'):
@@ -35,8 +35,3 @@ for filename in os.listdir(directory):
                 f.write(f"{numbers}\n")
 
 
-for i in range(0, len(data)):
-    if data[i] == data[i+1]:
-        print(data[i+1])
-    else:
-        print('Весь список без повторений')

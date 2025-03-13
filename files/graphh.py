@@ -1,27 +1,23 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
+from statsmodels.tsa.stattools import acf
 
+# Загрузка данных
+data = pd.read_csv(r"C:\project\parsing_website\csv\2024-07-26.csv", columns=["Value"])  # если есть время
 
-# Загрузка объединенного файла
-df = pd.read_csv(r'D:\ProjectPython\parsing_website\csv\2024-07-25.csv')
-
-# Получение общей информации о данных
-print(df.info())
-print(df.describe())
-print(df.isnull().sum())  # Проверка на пропущенные значения
-
-
-# Пример визуализации
-plt.figure(figsize=(12, 6))
-sns.lineplot(data=df, x='Date', y='Value')  # Замените 'Value' на имя вашего столбца
-plt.title('Числовой ряд по датам')
-plt.xticks(rotation=45)
+# Гистограмма
+plt.hist(data["Value"], bins=[1, 2, 3, 4, 5, 10, 100, 2000], edgecolor="black")
+plt.yscale("log")  # для удобства, если есть экстремальные значения
+plt.title("Распределение значений")
 plt.show()
 
-from statsmodels.tsa.stattools import adfuller
+# Автокорреляция (лаги = 10)
+autocorr = acf(data["Value"], nlags=10)
+plt.stem(autocorr)
+plt.title("Автокорреляция")
+plt.show()
 
-# Проверка стационарности временного ряда
-result = adfuller(df['Value'])  # Замените 'Value' на имя вашего столбца
-print('ADF Statistic:', result[0])
-print('p-value:', result[1])
+# Анализ экстремальных значений
+high_values = data[data["Value"] > 100]
+print("Экстремальные значения:", high_values["Value"].unique())
+print("Их количество в день:", high_values.groupby(high_values["Time"].dt.date).size())
