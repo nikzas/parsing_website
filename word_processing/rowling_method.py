@@ -3,6 +3,9 @@ import pandas as pd
 import numpy as np
 import os
 
+# Эти методы правильно формируют список CSV - осталось только наложить время
+
+
 def read_data(file_path):
     with open(file_path, 'r') as file:
         lines = file.readlines()
@@ -22,8 +25,8 @@ def find_shift_position(main_arr, new_arr, precision=2):
 
     return len(new_arr) - max_overlap
 
-input_folder = r'D:\ProjectPython\parsing_website\st'
-output_folder = r'D:\ProjectPython\parsing_website\csv'
+input_folder = r'D:\ProjectPython\parsing_website\data\test_data'
+output_folder = r'D:\ProjectPython\parsing_website\word_processing\result_csv'
 
 # Получаем список всех файлов в папке
 for filename in os.listdir(input_folder):
@@ -42,7 +45,7 @@ for filename in os.listdir(input_folder):
             if len(lst) != list_length:
                 print(f"Ошибка в файле {filename}: список {idx} имеет длину {len(lst)} вместо {list_length}!")
                 break
-        else:  # Если не было ошибок, продолжаем
+        else:
             combined = np.array(data[0], dtype=np.float64)
             print(f"Начальная длина в файле {filename}: {len(combined)}")
 
@@ -55,4 +58,5 @@ for filename in os.listdir(input_folder):
 
             # Сохранение в CSV
             pd.DataFrame(combined, columns=["Value"]).to_csv(output_csv_file, index=False)
-            print(f"Итоговая длина в файле {filename}: {len(combined)}. Данные сохранены в {output_csv_file}")
+            print(f"Итоговая длина в файле(это сумма всех добавленных чисел) {filename}: {len(combined)}.")
+            print(f"Данные сохранены в {output_csv_file}")
