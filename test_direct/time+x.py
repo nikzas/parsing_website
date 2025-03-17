@@ -1,9 +1,11 @@
 import csv
 import os
 from glob import glob
+import pandas as pd
+import numpy as np
 
 directory = r'D:\ProjectPython\parsing_website\test_direct\dataset'
-output_file = r'D:\ProjectPython\parsing_website\test_direct\dataset\2024-07-25.csv'
+output_file = r'D:\ProjectPython\parsing_website\test_direct\dataset\result.csv'
 
 
 def process_files():
@@ -59,4 +61,6 @@ def write_csv_file(filter):
 if __name__ == '__main__':
     data = process_files()
     data_set = clear_rows(data)
+    del data
     write_csv_file(data_set)
+
