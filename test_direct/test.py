@@ -3,15 +3,12 @@ import os
 from glob import glob
 
 directory = r'D:\ProjectPython\parsing_website\test_direct\dataset'
-output_directory = r'D:\ProjectPython\parsing_website\test_direct\csv_results'  # Папка для сохранения CSV файлов
 
 
 def process_files():
-    # Создаем папку для сохранения CSV файлов, если она не существует
-    os.makedirs(output_directory, exist_ok=True)
 
     for filepath in glob(os.path.join(directory, '*.txt')):
-        errors = {  # Словарь для хранения ошибок для текущего файла
+        errors = {
             'not_line': 0,
             'fetch_error': 0,
             '-': 0,
@@ -46,17 +43,18 @@ def process_files():
                     errors['max_values'] += 1
                     continue
 
-                if 20 < len(values):
+                if 5 < len(values) :
                     errors['min_values'] += 1
                     continue
 
         # Очистка от повторяющихся значений
         filtered_data = clear_rows(data)
 
-        # Вывод ошибок для текущего файла
         print(f"Errors for {os.path.basename(filepath)}: {errors}")
         write_csv_file(filepath, filtered_data)  # Записываем в CSV файл с тем же именем
+        errors.clear()
 
+    return errors
 
 
 def clear_rows(data):
@@ -72,8 +70,8 @@ def clear_rows(data):
 
 
 def write_csv_file(input_file, data):
-    ### Генерация имени выходного файла в новой папке
-    output_file = os.path.join(output_directory, os.path.basename(input_file).replace('.txt', '.csv'))
+    ### Генерация имени выходного файла
+    output_file = os.path.splitext(input_file)[0] + '.csv'
 
     ### Запись в файл
     with open(output_file, 'w', newline='', encoding='utf-8') as f:
@@ -86,4 +84,5 @@ def write_csv_file(input_file, data):
 
 
 if __name__ == '__main__':
-    process_files()
+    errors = process_files()
+    print(errors)
