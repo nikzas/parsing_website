@@ -58,3 +58,4 @@ for file in csv_files:
     result_df.to_csv(output_file, index=False)
 
     print(f"Обработан файл: {file}, сохранен как: {output_file}")
+
